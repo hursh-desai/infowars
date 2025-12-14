@@ -3,7 +3,7 @@
 import { use } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { useUser } from "@clerk/nextjs";
+import { useUser, UserButton } from "@clerk/nextjs";
 import Link from "next/link";
 import { FollowButton } from "@/components/FollowButton";
 
@@ -38,6 +38,33 @@ export default function ProfilePage({
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900">
+      <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity">
+            Info Wars
+          </Link>
+          <nav className="flex items-center gap-4">
+            {currentUser && (
+              <>
+                <Link
+                  href="/challenges"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Challenges
+                </Link>
+                <Link
+                  href="/profile/edit"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Profile
+                </Link>
+                <UserButton />
+              </>
+            )}
+          </nav>
+        </div>
+      </header>
+
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="bg-white dark:bg-gray-800 rounded-lg shadow p-6 mb-6">
           <div className="flex justify-between items-start mb-4">

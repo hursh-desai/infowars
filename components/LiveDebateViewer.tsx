@@ -3,10 +3,11 @@
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Id } from "@/convex/_generated/dataModel";
-import { useUser } from "@clerk/nextjs";
+import { useUser, UserButton } from "@clerk/nextjs";
 import { useState, useEffect } from "react";
 import { DebateTimer } from "./DebateTimer";
 import { SpectatorChat } from "./SpectatorChat";
+import Link from "next/link";
 
 interface LiveDebateViewerProps {
   debateId: Id<"debates">;
@@ -83,15 +84,43 @@ export function LiveDebateViewer({ debateId }: LiveDebateViewerProps) {
   };
 
   return (
-    <div className="flex h-screen">
-      <div className="flex-1 flex flex-col">
-        <div className="p-6 border-b border-gray-200 dark:border-gray-700">
-          <h1 className="text-2xl font-bold">{debate.title}</h1>
-          <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
-            {participant1?.username} vs {participant2?.username} •{" "}
-            {debate.viewerCount} viewers
-          </div>
+    <div className="flex flex-col h-screen">
+      <header className="border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+          <Link href="/" className="text-2xl font-bold hover:opacity-80 transition-opacity">
+            Info Wars
+          </Link>
+          <nav className="flex items-center gap-4">
+            {currentUser && (
+              <>
+                <Link
+                  href="/challenges"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Challenges
+                </Link>
+                <Link
+                  href="/profile/edit"
+                  className="text-gray-700 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white"
+                >
+                  Profile
+                </Link>
+                <UserButton />
+              </>
+            )}
+          </nav>
         </div>
+      </header>
+
+      <div className="flex flex-1 overflow-hidden">
+        <div className="flex-1 flex flex-col">
+          <div className="p-6 border-b border-gray-200 dark:border-gray-700">
+            <h1 className="text-2xl font-bold">{debate.title}</h1>
+            <div className="mt-2 text-sm text-gray-600 dark:text-gray-400">
+              {participant1?.username} vs {participant2?.username} •{" "}
+              {debate.viewerCount} viewers
+            </div>
+          </div>
 
         <div className="p-6">
           <DebateTimer
@@ -149,10 +178,11 @@ export function LiveDebateViewer({ debateId }: LiveDebateViewerProps) {
             </form>
           </div>
         )}
-      </div>
+        </div>
 
-      <div className="w-80">
-        <SpectatorChat debateId={debateId} />
+        <div className="w-80">
+          <SpectatorChat debateId={debateId} />
+        </div>
       </div>
     </div>
   );
