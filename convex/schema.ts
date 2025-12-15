@@ -19,10 +19,15 @@ export default defineSchema({
     ),
     followers: v.array(v.id("users")),
     following: v.array(v.id("users")),
+    lastSeenAt: v.optional(v.number()),
+    notificationChallengeCreated: v.optional(v.boolean()),
+    notificationChallengeAccepted: v.optional(v.boolean()),
+    notificationDebateStarting: v.optional(v.boolean()),
     createdAt: v.number(),
   })
     .index("by_clerk_id", ["clerkId"])
-    .index("by_username", ["username"]),
+    .index("by_username", ["username"])
+    .index("by_last_seen", ["lastSeenAt"]),
 
   debates: defineTable({
     title: v.string(),
@@ -96,4 +101,26 @@ export default defineSchema({
     .index("by_challenger", ["challengerId"])
     .index("by_recipient", ["recipientId"])
     .index("by_status", ["status"]),
+
+  debateViewers: defineTable({
+    debateId: v.id("debates"),
+    userId: v.optional(v.id("users")),
+    sessionId: v.optional(v.string()), // For anonymous users
+    lastSeenAt: v.number(),
+  })
+    .index("by_debate", ["debateId"])
+    .index("by_debate_user", ["debateId", "userId"])
+    .index("by_debate_session", ["debateId", "sessionId"]),
+
+  pushSubscriptions: defineTable({
+    userId: v.id("users"),
+    endpoint: v.string(),
+    keys: v.object({
+      p256dh: v.string(),
+      auth: v.string(),
+    }),
+    createdAt: v.number(),
+  })
+    .index("by_user", ["userId"])
+    .index("by_endpoint", ["endpoint"]),
 });

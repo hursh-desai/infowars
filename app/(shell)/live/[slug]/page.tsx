@@ -32,3 +32,4 @@ export default function LiveDebatePage({
 
   return <LiveDebateViewer debateId={debate._id} />;
 }
+

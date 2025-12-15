@@ -1,4 +1,5 @@
 import { internalMutation } from "./_generated/server";
+import { api } from "./_generated/api";
 
 export const checkScheduledDebates = internalMutation({
   args: {},
@@ -15,6 +16,27 @@ export const checkScheduledDebates = internalMutation({
         status: "live",
         actualStartTime: now,
         roundStartTime: now,
+      });
+
+      // Get participant usernames for notifications
+      const participant1 = await ctx.db.get(debate.participant1);
+      const participant2 = await ctx.db.get(debate.participant2);
+      const participant1Username = participant1?.username || "User";
+      const participant2Username = participant2?.username || "User";
+
+      // Trigger notifications to both participants (async, don't wait)
+      ctx.scheduler.runAfter(0, (api.pushNotifications as any).notifyDebateStarted, {
+        participantId: debate.participant1,
+        opponentUsername: participant2Username,
+        debateTitle: debate.title,
+        debateId: debate._id,
+      });
+
+      ctx.scheduler.runAfter(0, (api.pushNotifications as any).notifyDebateStarted, {
+        participantId: debate.participant2,
+        opponentUsername: participant1Username,
+        debateTitle: debate.title,
+        debateId: debate._id,
       });
     }
   },

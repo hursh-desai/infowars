@@ -81,6 +81,9 @@ export const updateProfile = mutation({
         })
       )
     ),
+    notificationChallengeCreated: v.optional(v.boolean()),
+    notificationChallengeAccepted: v.optional(v.boolean()),
+    notificationDebateStarting: v.optional(v.boolean()),
   },
   handler: async (ctx, args) => {
     const { userId, ...updates } = args;
@@ -108,5 +111,38 @@ export const searchByUsername = query({
         username: user.username,
         displayName: user.displayName,
       }));
+  },
+});
+
+export const updateLastSeen = mutation({
+  args: { userId: v.id("users") },
+  handler: async (ctx, args) => {
+    await ctx.db.patch(args.userId, {
+      lastSeenAt: Date.now(),
+    });
+  },
+});
+
+export const getOnlineUsers = query({
+  args: { excludeUserId: v.optional(v.id("users")) },
+  handler: async (ctx, args) => {
+    const thirtySecondsAgo = Date.now() - 30000;
+    const allUsers = await ctx.db.query("users").collect();
+    
+    return allUsers
+      .filter((user) => {
+        if (args.excludeUserId && user._id === args.excludeUserId) {
+          return false;
+        }
+        return user.lastSeenAt && user.lastSeenAt > thirtySecondsAgo;
+      })
+      .map((user) => ({
+        _id: user._id,
+        username: user.username,
+        displayName: user.displayName,
+        ideologyTags: user.ideologyTags,
+        lastSeenAt: user.lastSeenAt,
+      }))
+      .sort((a, b) => (b.lastSeenAt || 0) - (a.lastSeenAt || 0));
   },
 });

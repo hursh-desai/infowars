@@ -1,0 +1,18 @@
+{
+  "name": "Info Wars - Debate Platform",
+  "short_name": "Info Wars",
+  "description": "A neutral platform for debate where people wear their ideologies with pride",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#000000",
+  "orientation": "portrait-primary",
+  "icons": [
+    {
+      "src": "/favicon.ico",
+      "sizes": "any",
+      "type": "image/x-icon"
+    }
+  ]
+}
+

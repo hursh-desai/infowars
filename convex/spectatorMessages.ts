@@ -9,8 +9,8 @@ export const send = mutation({
   },
   handler: async (ctx, args) => {
     const debate = await ctx.db.get(args.debateId);
-    if (!debate || debate.status !== "live") {
-      throw new Error("Debate not found or not live");
+    if (!debate || (debate.status !== "live" && debate.status !== "scheduled")) {
+      throw new Error("Debate not found or not available for chat");
     }
 
     await ctx.db.insert("spectatorMessages", {
