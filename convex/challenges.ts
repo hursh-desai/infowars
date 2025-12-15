@@ -28,7 +28,7 @@ export const create = mutation({
     const challengerUsername = challenger?.username || "Someone";
 
     // Trigger notification to recipient (async, don't wait)
-    ctx.scheduler.runAfter(0, (api.pushNotifications as any).notifyChallengeCreated, {
+    ctx.scheduler.runAfter(0, (api as any).pushNotificationsActions.notifyChallengeCreated, {
       recipientId: args.recipientId,
       challengerUsername,
       challengeTitle: args.title,
@@ -110,7 +110,7 @@ export const accept = mutation({
     });
 
     // Trigger notification to challenger (async, don't wait)
-    ctx.scheduler.runAfter(0, (api.pushNotifications as any).notifyChallengeAccepted, {
+    ctx.scheduler.runAfter(0, (api as any).pushNotificationsActions.notifyChallengeAccepted, {
       challengerId: challenge.challengerId,
       recipientUsername,
       challengeTitle: challenge.title,

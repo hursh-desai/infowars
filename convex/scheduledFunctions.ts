@@ -25,14 +25,14 @@ export const checkScheduledDebates = internalMutation({
       const participant2Username = participant2?.username || "User";
 
       // Trigger notifications to both participants (async, don't wait)
-      ctx.scheduler.runAfter(0, (api.pushNotifications as any).notifyDebateStarted, {
+      ctx.scheduler.runAfter(0, (api as any).pushNotificationsActions.notifyDebateStarted, {
         participantId: debate.participant1,
         opponentUsername: participant2Username,
         debateTitle: debate.title,
         debateId: debate._id,
       });
 
-      ctx.scheduler.runAfter(0, (api.pushNotifications as any).notifyDebateStarted, {
+      ctx.scheduler.runAfter(0, (api as any).pushNotificationsActions.notifyDebateStarted, {
         participantId: debate.participant2,
         opponentUsername: participant1Username,
         debateTitle: debate.title,
