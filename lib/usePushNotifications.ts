@@ -169,7 +169,7 @@ export function usePushNotifications() {
       // Subscribe to push service
       const subscription = await registration.pushManager.subscribe({
         userVisibleOnly: true,
-        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey),
+        applicationServerKey: urlBase64ToUint8Array(vapidPublicKey) as BufferSource,
       });
 
       // Get user ID from Convex (we need to get it by Clerk ID)
