@@ -1,13 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { DebateCard } from "@/components/DebateCard";
 import Link from "next/link";
 
-export default function SearchPage() {
+function SearchContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const queryParam = searchParams.get("q") || "";
@@ -31,9 +31,7 @@ export default function SearchPage() {
   };
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-      <h1 className="text-3xl font-bold mb-6">Search</h1>
-      
+    <>
       {/* Search Bar */}
       <form onSubmit={handleSearchSubmit} className="mb-8">
         <div className="relative max-w-2xl">
@@ -197,6 +195,17 @@ export default function SearchPage() {
             )}
         </div>
       )}
+    </>
+  );
+}
+
+export default function SearchPage() {
+  return (
+    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+      <h1 className="text-3xl font-bold mb-6">Search</h1>
+      <Suspense fallback={<div className="text-center py-12 text-gray-500 dark:text-gray-400">Loading...</div>}>
+        <SearchContent />
+      </Suspense>
     </main>
   );
 }
